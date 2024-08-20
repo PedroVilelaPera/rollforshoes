@@ -35,18 +35,15 @@ jogadores = []
 def mostrar_jogadores():
     print('\n')
     print(f'--> Aventureiros da mesa de {DM} <---')
-    player = 1
-    for x in jogadores:
-            counter = 0   
-            print(f'[Jogador{player}]')
-            print(f"Nome: {x['Nome']}")
+    for x in jogadores: 
+            counter = 0
+            print(f"[Ficha de {x['Nome']}]")
             print(f"XP: {x['Experiencia']}")
             print('Habilidades:')
             for y in x['Habilidades']:
                 for chave,valor in y.items():
                     counter += 1
                     print(f'{counter}. {chave} [{valor}]')
-            player += 1
             print('\n')
 
 print('o---SUPER ROLL FOR SHOES---o')
@@ -79,20 +76,43 @@ if ato == 1:
         ato = int(input('Insira o número correspondente a ação que deseja fazer: '))
 
         if ato == 1:
+            ficha = 0
+
             os.system("cls")
             mostrar_jogadores()
             rolador = input('Insira o nome do jogador que irá rolar: ')
             for x in jogadores:
-                if rolador == x['Nome']:
-                    print('Funcionou!')
-                    menu = input('Aperte qualquer tecla para voltar para o menu.')
-                    break
-                else:
-                    while rolador != x['Nome']:
+                while True:
+                    if rolador == x['Nome']:
+                        ficha = x                     
+                        break
+                    else:
                         os.system("cls")
                         mostrar_jogadores()
                         print('[ERRO] Nome de jogador inválido.')
                         rolador = input('Insira o nome do jogador presente na mesa que irá rolar: ')
+
+            print('\n')
+
+            counter = 0
+            print(f"[Habilidades de {ficha['Nome']}]")
+            for y in ficha['Habilidades']:
+                for chave,valor in y.items():
+                    counter += 1
+                    print(f'{counter}. {chave} [{valor}]')
+
+            print('\n')
+
+            num_habilidade = int(input('Digite o número correspondente a habilidade: '))
+            posicao_interna = ficha['Habilidades']
+            habilidade_escolhida = posicao_interna[num_habilidade-1]
+            lista_habilidade = list(habilidade_escolhida)
+            chave_habilidade = lista_habilidade[0]
+            dado_habilidade = habilidade_escolhida[chave_habilidade]
+
+            print(dado_habilidade)
+            
+            menu = input('Aperte qualquer tecla para voltar para o menu.')
 
         elif ato == 2:
             mostrar_jogadores() 
