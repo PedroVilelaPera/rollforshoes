@@ -19,12 +19,13 @@
 # 1 - Easy / 2 - Average / 2 - Hard / 4 - Nearly impossible
 
 # FUNÇÕES
-# - Rolar os dados (tanto seu como o oposto de acordo com a dificuldade)
-# - Inserir seus jogadores e dados (exp e habilidades)
-# - SIstema de Expêriência
-# - Definir dificuldade da ação GM
+# - Rolar os dados (tanto seu como o oposto de acordo com a dificuldade) - FEITO
+# - Inserir seus jogadores e dados (exp e habilidades) - FEITO
+# - SIstema de Expêriência - FEITO
+# - Definir dificuldade da ação GM - FEITO
 # - Opção de normal play ou batalha
 # - Em modo batalha os dados são rolados para definir a ordem de cada um irá atacar.
+# - Extras
 
 import os
 import time
@@ -56,8 +57,17 @@ def mostrar_jogadores():
             for y in x['Habilidades']:
                 for chave,valor in y.items():
                     counter += 1
-                    print(f'{counter}. {chave} [{valor}]')
+                    print(f'[{counter}] {chave} | Nível = {valor}')
             print('\n')
+
+def nova_habilidade(jogador):
+    print('\n')
+    print(f'[Dungeon Master {DM}]')
+    habilidade = input(f'Insira o nome da nova habilidade de {jogador['Nome']}: ')
+    habilidades = jogador['Habilidades']
+    nivel = nivel_habilidade + 1
+    nova_habilidade = {habilidade: nivel}
+    habilidades.append(nova_habilidade)
 
 while True:
     print('o---SUPER ROLL FOR SHOES---o')
@@ -74,8 +84,16 @@ while True:
         DM = input(f'Insira o nome do Dungeon Master: ')
         print('\n')
         quant_jogadores = int(input('Insira a quantidade de jogadores: '))
-        for x in range(quant_jogadores):
-            criar_jogador()
+        if quant_jogadores > 0: 
+            for x in range(quant_jogadores):
+                criar_jogador()
+        else:
+            while quant_jogadores <= 0:
+                print('[ERRO] Quantidade de jogadores deve ser maior que 0.')
+                quant_jogadores = int(input('Insira a quantidade de jogadores: '))
+                for x in range(quant_jogadores):
+                    
+                    criar_jogador()
 
         while True:
             os.system("cls")
@@ -143,15 +161,37 @@ while True:
 
                 dado_dm = rolar_dado(dificuldade)
                 print('\n')
-                if dado_jogador > dado_dm:
-                    print(f'Ação bem sucedida! Seu dado foi {dado_jogador}, em relação ao {dado_dm} do dado contrário.')
+                if dado_jogador % 6 == 0:
+                    print(f'Parabéns {ficha['Nome']}! você tirou [{dado_jogador}]!')
+                    print('Você fez sua ação com tanta excelência...')
+                    print('Que agora poderá receber uma nova habilidade de acordo com o que você fez!')
+
+                    nova_habilidade(ficha)
+
+                elif dado_jogador > dado_dm:
+                    print(f'Ação bem sucedida! Seu dado foi [{dado_jogador}], em relação ao [{dado_dm}] do dado contrário.')
                 elif dado_jogador == dado_dm:
-                    print(f'Empate! Seu dado foi {dado_jogador}, em relação ao {dado_dm} do dado contrário.')
-                elif dado_jogador == 6 and nivel_habilidade == 1:
-                    pass
-                    #nova habilidade
+                    print(f'Empate! Seu dado foi [{dado_jogador}], em relação ao [{dado_dm}] do dado contrário.')
                 else:
-                    print(f'Você falhou! Seu dado foi {dado_jogador}, em relação ao {dado_dm} do dado contrário.')
+                    print(f'Você falhou! Seu dado foi [{dado_jogador}], em relação ao [{dado_dm}] do dado contrário.')
+                    if ficha['Experiencia'] > 0:
+                        print('\n')
+                        print(f'{ficha['Nome']} você possui {ficha['Experiencia']} unidade(s) de XP.')
+                        print('Gostaria de utilizar uma delas em troca de uma nova habilidade?')
+                        print('(Sua ação ainda falhará e você não receberá experiência ao final.)')
+                        print('[1] Sim')
+                        print('[2] Não')
+                        usar_xp = int(input('Insira o número correspondente a ação que deseja fazer: '))
+
+                        if usar_xp == 1:
+                            nova_habilidade(ficha)
+                            ficha['Experiencia'] -= 1
+                        else:
+                            ficha['Experiencia'] += 1
+                    else:
+                        ficha['Experiencia'] += 1
+
+                    
                 
                 print('\n')
                 input('Aperte qualquer tecla para voltar para o menu.')
@@ -170,6 +210,7 @@ while True:
 
             elif ato == 4:
                 print('\n')
+                jogadores = []
                 print('Até a próxima aventura!')
                 time.sleep(3)
                 os.system('cls')
@@ -179,4 +220,5 @@ while True:
         print('See you traveler...')
         time.sleep(3)
         break
+
 
