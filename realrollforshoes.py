@@ -37,7 +37,7 @@ def rolar_dado(quant_dado):
     dado = 0
     for x in range(quant_dado):
         dado += (random.randint(1,6))
-        return dado
+    return dado
     
 def criar_jogador():
     global jogadores
